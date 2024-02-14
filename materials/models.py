@@ -8,6 +8,7 @@ class Course(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название')
     description = models.TextField(verbose_name='Описание', **NULLABLE)
     preview = models.ImageField(upload_to='course/', verbose_name='Превью', **NULLABLE)
+    link = models.CharField(max_length=300, verbose_name='Ссылка', **NULLABLE)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
@@ -23,7 +24,7 @@ class Lesson(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название')
     description = models.TextField(verbose_name='Описание', **NULLABLE)
     preview = models.ImageField(upload_to='lesson/', verbose_name='Превью', **NULLABLE)
-    link = models.CharField(max_length=200, verbose_name='Ссылка', **NULLABLE)
+    link = models.CharField(max_length=300, verbose_name='Ссылка', **NULLABLE)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
@@ -37,3 +38,14 @@ class Lesson(models.Model):
         verbose_name_plural = 'Уроки'
 
 
+class Subscription(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс', **NULLABLE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь',
+                             **NULLABLE)
+
+    def __str__(self):
+        return f'{self.user}: {self.course}'
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
