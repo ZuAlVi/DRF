@@ -19,4 +19,5 @@ urlpatterns = [
 
     path('courses/subscription/<int:pk>/', views.SubscriptionCreateAPIView.as_view(), name='subscription_create'),
     path('courses/unsubscribe/<int:pk>/', views.SubscriptionDestroyAPIView.as_view(), name='subscription_delete'),
+    path('courses/buy/<int:pk>/', views.PaymentCreateAPIView.as_view(), name='buy_course'),
 ] + router.urls

@@ -38,13 +38,13 @@ class User(AbstractUser):
 
 
 class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', null=True)
     date_of_payment = models.DateField(auto_now=True, verbose_name='Дата оплаты')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс', **NULLABLE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='Урок', **NULLABLE)
-    payment_amount = models.SmallIntegerField(verbose_name='Сумма оплаты')
+    payment_amount = models.SmallIntegerField(verbose_name='Сумма оплаты', null=True)
     payment_method = models.CharField(max_length=8, default='transfer', choices=PAYMENT_CHOICE,
-                                      verbose_name='Способ оплаты')
+                                      verbose_name='Способ оплаты', null=True)
 
     def __str__(self):
         if self.course:

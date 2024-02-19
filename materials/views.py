@@ -6,6 +6,8 @@ from materials.models import Course, Lesson, Subscription
 from materials.paginators import MaterialsPagination
 from materials.permissions import IsOwner, IsModerator
 from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from users.models import Payment
+from users.serializers import PaymentSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -96,3 +98,23 @@ class SubscriptionDestroyAPIView(generics.DestroyAPIView):
         else:
             self.perform_destroy(subscription)
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PaymentCreateAPIView(generics.CreateAPIView):
+    serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        course_id = self.kwargs.get('pk')
+        course = Course.objects.get(pk=course_id)
+        user = self.request.user
+
+        if Payment.objects.filter(user=user, course=course).exists():
+            raise serializers.ValidationError('Платеж уже произведен')
+        else:
+            serializer.save(
+                user=user,
+                course=course,
+                payment_amount=course.price * 100,
+                payment_method='перевод'
+            )

@@ -9,6 +9,7 @@ class Course(models.Model):
     description = models.TextField(verbose_name='Описание', **NULLABLE)
     preview = models.ImageField(upload_to='course/', verbose_name='Превью', **NULLABLE)
     link = models.CharField(max_length=300, verbose_name='Ссылка', **NULLABLE)
+    price = models.IntegerField(verbose_name='Цена', **NULLABLE)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
@@ -25,6 +26,7 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name='Описание', **NULLABLE)
     preview = models.ImageField(upload_to='lesson/', verbose_name='Превью', **NULLABLE)
     link = models.CharField(max_length=300, verbose_name='Ссылка', **NULLABLE)
+    price = models.IntegerField(verbose_name='Цена', **NULLABLE)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
