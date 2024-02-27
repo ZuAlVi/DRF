@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 from materials.models import Course, Lesson
 
@@ -25,6 +26,7 @@ class User(AbstractUser):
     city = models.CharField(max_length=50, verbose_name='Город', **NULLABLE)
     avatar = models.ImageField(upload_to='users/', verbose_name='Аватар', **NULLABLE)
     role = models.CharField(max_length=9, choices=UserRoles.choices, default=UserRoles.MEMBER, verbose_name='Роль')
+    last_login = models.DateTimeField(default=timezone.now, verbose_name='Последняя авторизация')
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

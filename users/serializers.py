@@ -7,7 +7,7 @@ from users.models import Payment
 class PaymentSerializer(serializers.ModelSerializer):
     subscription_url = serializers.SerializerMethodField(read_only=True)
 
-    def get_subscription_url(self, instance):
+    def get_subscription_url(self, instance: Payment):
         response = creating_a_purchase(
             product=instance.course.title,
             price=instance.course.price * 100

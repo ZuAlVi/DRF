@@ -6,6 +6,7 @@ from materials.models import Course, Lesson, Subscription
 from materials.paginators import MaterialsPagination
 from materials.permissions import IsOwner, IsModerator
 from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from materials.tasks import update_alert
 from users.models import Payment
 from users.serializers import PaymentSerializer
 
@@ -30,6 +31,18 @@ class CourseViewSet(viewsets.ModelViewSet):
         elif self.action == 'destroy':
             permission_classes = [IsAuthenticated, IsOwner, ~IsModerator]
         return [permission() for permission in permission_classes]
+
+    def update(self, request, *args, **kwargs):
+        course_id = self.kwargs['pk']
+        course = Course.objects.get(pk=course_id)
+        for part in request.data:
+            if hasattr(course, part):
+                setattr(course, part, request.data[part])
+
+        subs_list = course.subscription_set.all()
+        for sub in subs_list:
+            update_alert.delay(sub.user.email, course.title)
+        return Response({'Result': 200})
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
